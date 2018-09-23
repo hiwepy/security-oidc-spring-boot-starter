@@ -1,0 +1,7 @@
+spring:
+  security:
+    mitre:
+      openid:
+        client:
+          allow-introspection: true
+          client-description: 客户端描述
