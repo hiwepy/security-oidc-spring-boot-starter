@@ -376,7 +376,6 @@
         <maven-surefire-plugin.vertsion>2.21.0</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
  		<mitreid.version>1.3.2</mitreid.version>
-		<shiro-biz.version>1.0.0-SNAPSHOT</shiro-biz.version>
 	</properties>
 	
 	<dependencies>
