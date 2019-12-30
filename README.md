@@ -14,7 +14,7 @@ shiro openid starter for spring boot
 ``` xml
 <dependency>
 	<groupId>${project.groupId}</groupId>
-	<artifactId>spring-boot-starter-shiro-biz</artifactId>
+	<artifactId>shiro-biz-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
