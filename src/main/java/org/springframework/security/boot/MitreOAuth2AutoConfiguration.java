@@ -37,7 +37,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  * https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/wiki/Token-Introspecting-Client-Config
  */
 @Configuration
