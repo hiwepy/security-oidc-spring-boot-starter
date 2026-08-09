@@ -15,8 +15,13 @@
  */
 package org.springframework.security.boot;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mitre.oauth2.model.RegisteredClient;
+import org.mitre.openid.connect.config.ServerConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("MitreOAuth2Properties Tests")
 class MitreOAuth2PropertiesTest {
+
     @Test
     @DisplayName("Default constructor creates non-null instance")
     void testDefaultInstance() {
@@ -41,160 +47,114 @@ class MitreOAuth2PropertiesTest {
     @DisplayName("Field 'enabled' can be set and read")
     void testEnabledField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("enabled");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.isEnabled()).isFalse();
+        props.setEnabled(true);
+        assertThat(props.isEnabled()).isTrue();
     }
 
     @Test
     @DisplayName("Field 'defaultExpireTime' can be set and read")
     void testDefaultExpireTimeField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("defaultExpireTime");
-            f.setAccessible(true);
-            f.set(props, 42);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getDefaultExpireTime()).isEqualTo(300000);
+        props.setDefaultExpireTime(60000);
+        assertThat(props.getDefaultExpireTime()).isEqualTo(60000);
     }
 
     @Test
     @DisplayName("Field 'forceCacheExpireTime' can be set and read")
     void testForceCacheExpireTimeField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("forceCacheExpireTime");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.isForceCacheExpireTime()).isFalse();
+        props.setForceCacheExpireTime(true);
+        assertThat(props.isForceCacheExpireTime()).isTrue();
     }
 
     @Test
     @DisplayName("Field 'cacheNonExpiringTokens' can be set and read")
     void testCacheNonExpiringTokensField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("cacheNonExpiringTokens");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.isCacheNonExpiringTokens()).isFalse();
+        props.setCacheNonExpiringTokens(true);
+        assertThat(props.isCacheNonExpiringTokens()).isTrue();
     }
 
     @Test
     @DisplayName("Field 'cacheTokens' can be set and read")
     void testCacheTokensField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("cacheTokens");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.isCacheTokens()).isTrue();
+        props.setCacheTokens(false);
+        assertThat(props.isCacheTokens()).isFalse();
     }
 
     @Test
     @DisplayName("Field 'issuer' can be set and read")
     void testIssuerField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("issuer");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getIssuer()).isEqualTo("https://admin-issuer.example.com/");
+        props.setIssuer("https://custom-issuer.example.com/");
+        assertThat(props.getIssuer()).isEqualTo("https://custom-issuer.example.com/");
     }
 
     @Test
     @DisplayName("Field 'jwtToken' can be set and read")
     void testJwtTokenField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("jwtToken");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.isJwtToken()).isTrue();
+        props.setJwtToken(false);
+        assertThat(props.isJwtToken()).isFalse();
     }
 
     @Test
     @DisplayName("Field 'introspectionUrl' can be set and read")
     void testIntrospectionUrlField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("introspectionUrl");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getIntrospectionUrl()).isNull();
+        props.setIntrospectionUrl("https://introspect.example.com/");
+        assertThat(props.getIntrospectionUrl()).isEqualTo("https://introspect.example.com/");
     }
 
     @Test
     @DisplayName("Field 'whitelist' can be set and read")
     void testWhitelistField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("whitelist");
-            f.setAccessible(true);
-            f.set(props, null);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getWhitelist()).isNotNull().isEmpty();
+        Set<String> whitelist = new HashSet<>();
+        whitelist.add("https://example.com");
+        props.setWhitelist(whitelist);
+        assertThat(props.getWhitelist()).containsExactly("https://example.com");
     }
 
     @Test
     @DisplayName("Field 'blacklist' can be set and read")
     void testBlacklistField() {
         MitreOAuth2Properties props = new MitreOAuth2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = MitreOAuth2Properties.class.getDeclaredField("blacklist");
-            f.setAccessible(true);
-            f.set(props, null);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getBlacklist()).isNotNull().isEmpty();
+        Set<String> blacklist = new HashSet<>();
+        blacklist.add("https://blocked.example.com");
+        props.setBlacklist(blacklist);
+        assertThat(props.getBlacklist()).containsExactly("https://blocked.example.com");
+    }
+
+    @Test
+    @DisplayName("Field 'client' can be set and read")
+    void testClientField() {
+        MitreOAuth2Properties props = new MitreOAuth2Properties();
+        assertThat(props.getClient()).isNotNull();
+        RegisteredClient client = new RegisteredClient();
+        props.setClient(client);
+        assertThat(props.getClient()).isSameAs(client);
+    }
+
+    @Test
+    @DisplayName("Field 'server' can be set and read")
+    void testServerField() {
+        MitreOAuth2Properties props = new MitreOAuth2Properties();
+        assertThat(props.getServer()).isNotNull();
+        ServerConfiguration server = new ServerConfiguration();
+        props.setServer(server);
+        assertThat(props.getServer()).isSameAs(server);
     }
 
     @Test

@@ -32,8 +32,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -62,21 +61,6 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	
 	@Autowired
 	private MitreOpenIDProperties properties;
-	// looks at the request and determines which issuer to use for lookup on the server
-	@Autowired
-	private IssuerService issuerService;
-	// holds server information (auth URI, token URI, etc.), indexed by issuer
-	@Autowired
-	private ServerConfigurationService serverConfiguration;
-	// holds client information (client ID, redirect URI, etc.), indexed by issuer of the server
-	@Autowired
-	private ClientConfigurationService clientConfiguration;
-	// provides extra options to inject into the outbound request
-	@Autowired
-	private AuthRequestOptionsService authOptions; // initialize with an empty set of options
-	// builds the actual request URI based on input from all other services
-	@Autowired
-	private AuthRequestUrlBuilder authRequestBuilder;
 	
 	@Bean
 	@ConditionalOnMissingBean
@@ -190,7 +174,10 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	}
 	
 	@Bean
-	public OIDCAuthenticationFilter openIdConnectAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public OIDCAuthenticationFilter openIdConnectAuthenticationFilter(AuthenticationManager authenticationManager,
+			IssuerService issuerService, ServerConfigurationService serverConfiguration,
+			ClientConfigurationService clientConfiguration, AuthRequestOptionsService authOptions,
+			AuthRequestUrlBuilder authRequestBuilder) {
 		
 		OIDCAuthenticationFilter filter = new OIDCAuthenticationFilter();
 		
@@ -212,7 +199,7 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	@Configuration
 	@ConditionalOnWebApplication
 	@ComponentScan("org.mitre.openid")
-	@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 6)
+	@Order(-94)
 	public static class MitreOauth2Configuration {
 		
 	}

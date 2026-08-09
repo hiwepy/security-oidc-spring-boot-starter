@@ -293,6 +293,11 @@
                         </goals>
                         <configuration>
                             <haltOnFailure>true</haltOnFailure>
+                            <excludes>
+                                <!-- Exclude AutoConfiguration classes due to mitreid library incompatibility with Spring 7.x -->
+                                <exclude>**/MitreOAuth2AutoConfiguration*</exclude>
+                                <exclude>**/MitreOpenIDAutoConfiguration*</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
@@ -580,6 +585,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+        <!-- For Spring Boot WebMVC AutoConfiguration (Spring Boot 4.1+) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- For Spring Context-Support -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -606,6 +617,13 @@
         <dependency>
             <groupId>org.mitre</groupId>
             <artifactId>openid-connect-client</artifactId>
+        </dependency>
+
+        <!-- For HttpClient 5 (required by mitreid client) -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <optional>true</optional>
         </dependency>
         
     </dependencies>
