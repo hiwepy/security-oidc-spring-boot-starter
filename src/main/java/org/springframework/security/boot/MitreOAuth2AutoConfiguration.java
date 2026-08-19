@@ -39,6 +39,7 @@ import org.springframework.util.ObjectUtils;
  * TODO
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/wiki/Token-Introspecting-Client-Config
+ * @since 1.0.0
  */
 @Configuration
 @ConditionalOnClass({ RegisteredClient.class, IntrospectingTokenService.class })
@@ -54,6 +55,11 @@ public class MitreOAuth2AutoConfiguration implements ApplicationContextAware {
 	@Autowired(required=false)
 	private HttpClient httpClient;
 	
+	/**
+	 * server Configuration.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerConfigurationService serverConfiguration() {
@@ -77,12 +83,22 @@ public class MitreOAuth2AutoConfiguration implements ApplicationContextAware {
 	}
 	
 	
+	/**
+	 * introspection Authority Granter.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public IntrospectionAuthorityGranter introspectionAuthorityGranter() {
 		return new SimpleIntrospectionAuthorityGranter();
 	}
 	
+	/**
+	 * registered Client.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public RegisteredClient registeredClient(@Autowired(required=false) Set<GrantedAuthority> authorities) {
@@ -91,6 +107,14 @@ public class MitreOAuth2AutoConfiguration implements ApplicationContextAware {
 		return registeredClient;
 	}
 	
+	/**
+	 * introspection URL Provider.
+	 *
+	 * @param registeredClient the registered client
+	 * @param serverConfiguration the server configuration
+	 * @param clientConfiguration the client configuration
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public IntrospectionConfigurationService introspectionUrlProvider(RegisteredClient registeredClient,
@@ -113,6 +137,13 @@ public class MitreOAuth2AutoConfiguration implements ApplicationContextAware {
 		
 	}
 	
+	/**
+	 * introspecting Token Service.
+	 *
+	 * @param introspectionAuthorityGranter the introspection authority granter
+	 * @param introspectionUrlProvider the introspection url provider
+	 * @return the result
+	 */
 	@Bean
 	public IntrospectingTokenService introspectingTokenService(IntrospectionAuthorityGranter introspectionAuthorityGranter, 
 			IntrospectionConfigurationService introspectionUrlProvider) {
@@ -136,11 +167,22 @@ public class MitreOAuth2AutoConfiguration implements ApplicationContextAware {
 		
 	}
 	
+	/**
+	 * Sets the application context.
+	 *
+	 * @param applicationContext the application context
+	 * @throws BeansException if an error occurs
+	 */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	/**
+	 * Returns the application context.
+	 *
+	 * @return the application context
+	 */
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}

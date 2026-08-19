@@ -49,6 +49,7 @@ import org.springframework.util.ObjectUtils;
  * TODO
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/wiki/Client-configuration
+ * @since 1.0.0
  */
 @Configuration
 @ConditionalOnClass({ ServerConfiguration.class, ServerConfigurationService.class })
@@ -62,6 +63,11 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	@Autowired
 	private MitreOpenIDProperties properties;
 	
+	/**
+	 * Returns the suer service.
+	 *
+	 * @return the suer service
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public IssuerService issuerService() {
@@ -78,12 +84,22 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 		return issuerService;
 	}
 	
+	/**
+	 * auth Request Options.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public AuthRequestOptionsService authRequestOptions() {
 		return new StaticAuthRequestOptionsService();
 	}
 	
+	/**
+	 * registered Client.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public RegisteredClient registeredClient(@Autowired(required=false) Set<GrantedAuthority> authorities) {
@@ -93,12 +109,24 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	}
 	
 	
+	/**
+	 * registered Client Service.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public RegisteredClientService registeredClientService() {
 		return new InMemoryRegisteredClientService();
 	}
 	
+	/**
+	 * client Configuration.
+	 *
+	 * @param registeredClientService the registered client service
+	 * @param registeredClient the registered client
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public ClientConfigurationService clientConfiguration(RegisteredClientService registeredClientService, 
@@ -122,6 +150,11 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 		return configurationService;
 	}
 
+	/**
+	 * server Configuration.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerConfigurationService serverConfiguration() {
@@ -146,12 +179,23 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 	}
 	
 
+	/**
+	 * Returns the suer granted authority.
+	 *
+	 * @return the suer granted authority
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public SubjectIssuerGrantedAuthority issuerGrantedAuthority() {
 		return new SubjectIssuerGrantedAuthority(properties.getSubject(), properties.getIssuer());
 	}
 	
+	/**
+	 * authorities Mapper.
+	 *
+	 * @param admins the admins
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public OIDCAuthoritiesMapper authoritiesMapper(Set<SubjectIssuerGrantedAuthority> admins) {
@@ -160,6 +204,12 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 		return authoritiesMapper;
 	}
 	
+	/**
+	 * open ID Connect Authentication Provider.
+	 *
+	 * @param authoritiesMapper the authorities mapper
+	 * @return the result
+	 */
 	@Bean
 	public OIDCAuthenticationProvider openIdConnectAuthenticationProvider(OIDCAuthoritiesMapper authoritiesMapper) {
 		OIDCAuthenticationProvider authcProvider = new OIDCAuthenticationProvider();
@@ -167,12 +217,28 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 		return authcProvider;
 	}
 	
+	/**
+	 * auth Request Builder.
+	 *
+	 * @return the result
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public AuthRequestUrlBuilder authRequestBuilder() {
 		return new PlainAuthRequestUrlBuilder();
 	}
 	
+	/**
+	 * open ID Connect Authentication Filter.
+	 *
+	 * @param authenticationManager the authentication manager
+	 * @param issuerService the issuer service
+	 * @param serverConfiguration the server configuration
+	 * @param clientConfiguration the client configuration
+	 * @param authOptions the auth options
+	 * @param authRequestBuilder the auth request builder
+	 * @return the result
+	 */
 	@Bean
 	public OIDCAuthenticationFilter openIdConnectAuthenticationFilter(AuthenticationManager authenticationManager,
 			IssuerService issuerService, ServerConfigurationService serverConfiguration,
@@ -204,11 +270,22 @@ public class MitreOpenIDAutoConfiguration implements ApplicationContextAware {
 		
 	}
 
+	/**
+	 * Sets the application context.
+	 *
+	 * @param applicationContext the application context
+	 * @throws BeansException if an error occurs
+	 */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	/**
+	 * Returns the application context.
+	 *
+	 * @return the application context
+	 */
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
